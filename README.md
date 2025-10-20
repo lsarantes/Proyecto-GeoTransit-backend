@@ -9,8 +9,9 @@ git clone git@github.com:lsarantes/Proyecto-GeoTransit-backend.git
 git flow init
 ```
 ### 🤖 2.Instalar nodejs y nestjs
-* npm i -g @nestjs/cli
-
+```
+npm i -g @nestjs/cli
+```
 ## 🦭 **Comandos para subir cambios al repo remoto** 
 
 Para enviar los cambios locales al repositorio remoto **`Solo la primera vez`**, usa:
