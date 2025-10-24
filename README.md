@@ -1,17 +1,24 @@
 # 💻 **Proyecto GeoTransit - Backend**
 
 ## ⚙️ **Comandos Iniciales**
-> **Nota importante**: Estos comando solo se ejecutaran una vez al iniciar el proyecto.
+**Nota importante**: Estos comando solo se ejecutaran una vez al iniciar el proyecto.
 
-### ✈️ 1.Git bash
+### ✈️ 1. Git
 ```bash
 git clone git@github.com:lsarantes/Proyecto-GeoTransit-backend.git
 git flow init
 ```
-### 🤖 2.Instalar nodejs y nestjs
+### 🤖 2. Docker Desktop
+**Nota importante**: Deben tener abierta la app de Desktop.
+```bash
+docker compose up
 ```
-npm i -g @nestjs/cli
+💡 **POSIBLE ERROR:** Si se muestra un error de que node_modules no se encuentra, debes ejecutar primero.
+```bash
+npm install
 ```
+y luego el comando anterior.
+
 ## 🦭 **Comandos para subir cambios al repo remoto** 
 
 Para enviar los cambios locales al repositorio remoto **`Solo la primera vez`**, usa:
