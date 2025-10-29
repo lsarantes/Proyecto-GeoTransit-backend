@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { BusesModule } from './buses/buses.module';
 import { CooperativasModule } from './cooperativas/cooperativas.module';
 import { PersonasModule } from './personas/personas.module';
@@ -15,13 +14,10 @@ import { CooperativasRutasModule } from './cooperativas_rutas/cooperativas_rutas
 import { BahiasModule } from './bahias/bahias.module';
 import { RutasBahiasModule } from './rutas_bahias/rutas_bahias.module';
 import { AlertasModule } from './alertas/alertas.module';
-import { TdAlertasModule } from './td_alertas/td_alertas.module';
-import { TdEstadoBusesModule } from './td_estado_buses/td_estado_buses.module';
-import { TdEstadoUbicacionesModule } from './td_estado_ubicaciones/td_estado_ubicaciones.module';
-import { TdNivelaccesosModule } from './td_nivelaccesos/td_nivelaccesos.module';
+import { UsersModule } from './Users/users.module';
 
 @Module({
-  imports: [UsersModule, BusesModule, CooperativasModule, PersonasModule, ConductoresModule, TelefonosModule, EncargadoscooperativasModule, EmpleadosMtiModule, PasajerosModule, RutasModule, CooperativasRutasModule, BahiasModule, RutasBahiasModule, AlertasModule, TdAlertasModule, TdEstadoBusesModule, TdEstadoUbicacionesModule, TdNivelaccesosModule],
+  imports: [UsersModule, BusesModule, CooperativasModule, PersonasModule, ConductoresModule, TelefonosModule, EncargadoscooperativasModule, EmpleadosMtiModule, PasajerosModule, RutasModule, CooperativasRutasModule, BahiasModule, RutasBahiasModule, AlertasModule],
   controllers: [AppController],
   providers: [AppService],
 })

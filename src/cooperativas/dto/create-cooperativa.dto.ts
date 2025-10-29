@@ -5,15 +5,15 @@ import { CooperativasRuta } from 'src/cooperativas_rutas/entities/cooperativas_r
 export class CreateCooperativaDto {
     @ApiProperty({ required: true, example: 'Cooperativa Los Pinos' })
     @validator.IsString()
-    nombre_cooperativa: String;
+    nombre_cooperativa: string;
 
     @ApiProperty({ required: true, example: 'Calle Principal #123' })
     @validator.IsString()
-    direccion: String;
+    direccion: string;
 
     @ApiProperty({ required: true, example: '505' })
     @validator.IsString()
-    cod_pais: String;
+    cod_pais: string;
 
     @ApiProperty({ required: true, example: 12.34567 })
     @validator.IsNumber()

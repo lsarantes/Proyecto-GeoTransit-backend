@@ -12,7 +12,7 @@ export class CreateBusDto {
 
     @ApiProperty({ required: true, example: 120 })
     @validator.IsNumber()
-    velocidad: Number;
+    velocidad: number;
 
     @ApiProperty({ required: true, example: 62 })
     @validator.IsInt()
@@ -20,10 +20,10 @@ export class CreateBusDto {
 
     @ApiProperty({ required: true })
     @validator.IsNumber()
-    latitud_actual: Number;
+    latitud_actual: number;
 
     @ApiProperty({ required: true })
-    longitud_actual: Number;
+    longitud_actual: number;
 
     @ApiProperty({ required: true, example: 'YYYY-MM-DD HH:SS' })
     @validator.IsDate()

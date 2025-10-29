@@ -1,3 +1,5 @@
+import { Role } from "@prisma/client";
+
 export class Persona {
     id: string; 
     primer_nombre: string;

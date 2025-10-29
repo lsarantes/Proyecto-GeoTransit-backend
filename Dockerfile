@@ -7,17 +7,15 @@ WORKDIR /src/app/nestjs
 # Copiar package.json y package-lock.json
 COPY package*.json ./
 
-# Instalar dependencias (incluye prisma y @prisma/client si están en package.json)
+# Instalar dependencias
 RUN npm install
 
-# Copiar el resto del proyecto
-COPY . .
-
-# Generar el cliente de Prisma (por si cambian los modelos)
-RUN npx prisma generate
+# Copiar archvos de configuración de TypeScript y NestJS
+COPY tsconfig.json ./
+COPY nest-cli.json ./
 
 # Exponer puerto
 EXPOSE 3000
 
-# Comando para arrancar la app en modo desarrollo
-CMD ["npm", "run", "start:dev"]
+# Comando para desarrollo
+CMD ["sh", "-c", "npx prisma generate && npm run start:dev"]
