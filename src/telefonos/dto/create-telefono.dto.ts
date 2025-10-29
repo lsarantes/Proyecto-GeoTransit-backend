@@ -1,6 +1,5 @@
 import * as validator from 'class-validator';
 import { ApiProperty } from "@nestjs/swagger";
-import { Persona } from 'src/personas/entities/persona.entity';
 
 export class CreateTelefonoDto {
     @ApiProperty({ required: true, example: '+50512345678' })

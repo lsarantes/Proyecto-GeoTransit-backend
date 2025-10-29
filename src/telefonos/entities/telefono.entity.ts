@@ -1,5 +1,6 @@
 export class Telefono {
-  no_telefonico: string;
-  compania: string;
-  persona_id: number;
+ id: number; 
+    no_telefonico: string;
+    compania: string;
+    persona_id: string;
 }

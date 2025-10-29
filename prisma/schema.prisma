@@ -5,224 +5,195 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
-
-
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-
-
 model Persona {
-  id String @id 
-  primer_nombre String
-  segundo_nombre String?
-  tercer_nombre String?
-  primer_apellido String
-  segundo_apellido String?
-  cod_pais String?
-  url_Foto String?
-  fecha_de_creacion DateTime @default(now())
-  fecha_actualizada DateTime @updatedAt
-  role Role @default(PASAJERO)
-  telefonos Telefono[]
-  user User?
-  conductor Conductor?
+  id                    String                 @id
+  primer_nombre         String
+  segundo_nombre        String?
+  tercer_nombre         String?
+  primer_apellido       String
+  segundo_apellido      String?
+  cod_pais              String?
+  url_Foto              String?
+  fecha_de_creacion     DateTime               @default(now())
+  fecha_actualizada     DateTime               @updatedAt
+  role                  Role                   @default(PASAJERO)
+  telefonos             Telefono[]
+  user                  User?
+  conductor             Conductor?
   encargado_cooperativa Encargado_Cooperativa?
-  empleado_mti Empleado_MTI?
-  pasajero Pasajero?
+  empleado_mti          Empleado_MTI?
+  pasajero              Pasajero?
 }
-
 
 model Telefono {
-  id Int @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   no_telefonico String
-  compania String
-  persona_id String
-  persona Persona @relation(fields: [persona_id], references: [id])
+  compania      String
+  persona_id    String
+  persona       Persona @relation(fields: [persona_id], references: [id])
 }
-
 
 model User {
-  id_usuario Int @id @default(autoincrement())
-  username String @unique
-  email String @unique
-  password String
+  id_usuario      Int      @id @default(autoincrement())
+  username        String   @unique
+  email           String   @unique
+  password        String
   f_ultimo_acceso DateTime @updatedAt
-  esta_activo Boolean @default(false)
-  persona_id String @unique
-  persona Persona @relation(fields: [persona_id], references: [id])
+  esta_activo     Boolean  @default(false)
+  persona_id      String   @unique
+  persona         Persona  @relation(fields: [persona_id], references: [id])
 }
-
 
 model Conductor {
-  id String @id 
+  id              String  @id
   buses_asignados Bus[]
-  persona_id String @unique
-  persona Persona @relation(fields: [persona_id],references: [id])
-
+  persona_id      String  @unique
+  persona         Persona @relation(fields: [persona_id], references: [id])
 }
+
 model Bus {
-  placa String @id 
-  modelo String
-  velocidad Float
-  capacidad_de_pasajeros Int
-  latitud_actual  Float
-  longitud_actual Float
+  placa                       String              @id
+  modelo                      String
+  velocidad                   Float
+  capacidad_de_pasajeros      Int
+  latitud_actual              Float
+  longitud_actual             Float
   fecha_hora_ultima_ubicacion DateTime
-  estado_ubicacion TD_Estado_Ubicacion
-  estado_bus TD_Estado_Bus
-  conductor_id String 
-  conductor Conductor @relation(fields: [conductor_id],references: [id])
+  estado_ubicacion            TD_Estado_Ubicacion
+  estado_bus                  TD_Estado_Bus
+  conductor_id                String
+  conductor                   Conductor           @relation(fields: [conductor_id], references: [id])
 }
-
 
 model Encargado_Cooperativa {
-  id String @id
-  persona_id String  @unique
-  persona Persona @relation(fields: [persona_id], references: [id])
+  id           String        @id
+  persona_id   String        @unique
+  persona      Persona       @relation(fields: [persona_id], references: [id])
   cooperativas Cooperativa[]
- 
- }
+}
 
-  model Empleado_MTI{
-    id_empleado_mti String @id
-    nivel_acceso TD_NivelAcceso
-    persona_id String @unique
-    bahias Bahias[]
-    persona Persona @relation(fields: [persona_id], references: [id])
+model Empleado_MTI {
+  id_empleado_mti String         @id
+  nivel_acceso    TD_NivelAcceso
+  persona_id      String         @unique
+  bahias          Bahias[]
+  persona         Persona        @relation(fields: [persona_id], references: [id])
+}
 
-  }
+model Pasajero {
+  id_pasajero   String  @id
+  bahia_origen  String
+  bahia_destino String
+  //ruta_a_utilizar Ruta[] agregar la referencia al identity
+  persona_id    String  @unique
+  persona       Persona @relation(fields: [persona_id], references: [id])
+  bahia_id      String
+  bahia         Bahias  @relation(fields: [bahia_id], references: [nombre_bahia])
+}
 
+model Cooperativa {
+  nombre_cooperativa String                @id
+  direccion          String
+  cod_pais           String
+  latitud_ubicacion  Float
+  logitud_ubicacion  Float
+  no_telefonico      Int
+  url_foto_perfil    String
+  fecha_de_creacion  DateTime
+  id_encargado       String
+  encargado          Encargado_Cooperativa @relation(fields: [id_encargado], references: [id])
+  ruta               Cooperativa_Ruta[]
+}
 
-  model Pasajero{
-    id_pasajero String @id
-    bahia_origen String
-    bahia_destino String
-    //ruta_a_utilizar Ruta[] agregar la referencia al identity
-    persona_id String @unique
-    persona Persona @relation(fields: [persona_id], references: [id])
-    bahia_id String
-    bahia Bahias @relation(fields: [bahia_id], references: [nombre_bahia])
-  }
+model Ruta {
+  nombre_ruta      String             @id
+  origen_latitud   Float
+  origen_longitud  Float
+  destino_latitud  Float
+  destino_longitud Float
+  fecha_creacion   DateTime
+  cooperativa      Cooperativa_Ruta[]
+  bahias           RutaBahia[]
+  alertas          Alertas[]
+}
 
+model Cooperativa_Ruta {
+  cooperativa_id String
+  ruta_id        String
+  ruta           Ruta        @relation(fields: [ruta_id], references: [nombre_ruta])
+  cooperativa    Cooperativa @relation(fields: [cooperativa_id], references: [nombre_cooperativa])
 
+  @@id([cooperativa_id, ruta_id])
+}
 
-  
+model Bahias {
+  nombre_bahia       String       @id
+  ubicacion_latitud  Float
+  ubicacion_longitud Float
+  url_foto           String
+  fecha_creada       DateTime
+  rutas              RutaBahia[]
+  empleado_mti_id    String
+  empleado_mti       Empleado_MTI @relation(fields: [empleado_mti_id], references: [id_empleado_mti])
+  pasajeros          Pasajero[]
+}
 
+model RutaBahia {
+  ruta_id  String
+  bahia_id String
+  bahia    Bahias @relation(fields: [bahia_id], references: [nombre_bahia])
+  ruta     Ruta   @relation(fields: [ruta_id], references: [nombre_ruta])
 
+  @@id([ruta_id, bahia_id])
+}
 
-model Cooperativa { 
-  nombre_cooperativa String @id
-  direccion String
-  cod_pais String
-  latitud_ubicacion Float
-  logitud_ubicacion Float
-  no_telefonico Int
-  url_foto_perfil String
-  fecha_de_creacion DateTime
-  id_encargado String
-  encargado Encargado_Cooperativa @relation(fields: [id_encargado], references: [id])
-  ruta Cooperativa_Ruta []
-
-} 
-
-  model Ruta {
-    nombre_ruta String @id
-    origen_latitud Float
-    origen_longitud Float
-    destino_latitud Float
-    destino_longitud Float
-    fecha_creacion DateTime
-    cooperativa Cooperativa_Ruta []
-    rutas RutaBahia[]
-    alertas Alertas[]
-  }
-
-  model Cooperativa_Ruta {
-  cooperativa_id String 
-  ruta_id String
-  ruta  Ruta @relation(fields: [ruta_id], references: [nombre_ruta])
-  cooperativa Cooperativa @relation(fields: [cooperativa_id], references: [nombre_cooperativa])
-
-    @@id([cooperativa_id, ruta_id])
-
-  }
-
-
-
-  model Bahias {
-    nombre_bahia String @id
-    ubicacion_latitud Float
-    ubicacion_longitud Float
-    url_foto String
-    fecha_creada DateTime
-    bahias RutaBahia []
-    empleado_mti_id String
-    empleado_mti Empleado_MTI @relation(fields: [empleado_mti_id], references: [id_empleado_mti])
-    pasajeros Pasajero []
-  }
-
-  model RutaBahia{
-    ruta_id String
-    bahia_id String
-    bahia Bahias @relation(fields: [bahia_id], references: [nombre_bahia])
-    ruta Ruta @relation(fields: [ruta_id], references: [nombre_ruta])
-  @@id([ruta_id,bahia_id])
-
-  }
-
-
-  model Alertas {
-    id_alerta String @id
-    tipo_alerta TD_Alerta
-    ruta_id String
-    ruta Ruta @relation(fields: [ruta_id], references: [nombre_ruta])
-
-  }
+model Alertas {
+  id_alerta   String    @id
+  tipo_alerta TD_Alerta
+  ruta_id     String
+  ruta        Ruta      @relation(fields: [ruta_id], references: [nombre_ruta])
+}
 
 enum TD_Alerta {
   Accidente
-  Desvio 
-  Falla_mecanica 
+  Desvio
+  Falla_mecanica
   Policia
   Trafico
-
 }
 
-
 enum TD_Estado_Bus {
-  ACTIVO 
+  ACTIVO
   EN_MANTENIMIENDO
   FUERA_DE_SERVICIO
 }
 
 enum TD_Estado_Ubicacion {
- ACTUAL
- ULTIMA_CONOCIDA
- DESCONOCIDA
+  ACTUAL
+  ULTIMA_CONOCIDA
+  DESCONOCIDA
 }
 
 enum TD_NivelAcceso {
-  Administrador 
+  Administrador
   Gestor_de_cooperativas_y_encargados
   Gestor_de_rutas
   Gestor_de_bahias
-
 }
 
-
-
 enum Role {
-PASAJERO
-CONDUCTORES
-GESTOR_DE_RUTAS
-EMPLEADO_MTI
-ENCARGADO_COOPERATIVA
-GESTOR_BAHIAS_MTI
+  PASAJERO
+  CONDUCTORES
+  GESTOR_DE_RUTAS
+  EMPLEADO_MTI
+  ENCARGADO_COOPERATIVA
+  GESTOR_BAHIAS_MTI
 }

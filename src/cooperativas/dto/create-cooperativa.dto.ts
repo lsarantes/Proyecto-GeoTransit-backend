@@ -1,5 +1,6 @@
 import * as validator from 'class-validator';
 import { ApiProperty } from "@nestjs/swagger";
+import { CooperativasRuta } from 'src/cooperativas_rutas/entities/cooperativas_ruta.entity';
 
 export class CreateCooperativaDto {
     @ApiProperty({ required: true, example: 'Cooperativa Los Pinos' })
@@ -37,6 +38,6 @@ export class CreateCooperativaDto {
     @ApiProperty({ required: true, example: 1, description: 'ID del encargado' })
     id_encargado: number;   
     
-    //@ApiProperty({ required: true, example: 'Ruta A' })
-    //ruta: Cooperativa_Ruta;
+    @ApiProperty({ required: false, example: 'Ruta A' })
+    ruta: CooperativasRuta[];
 }

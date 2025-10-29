@@ -1,5 +1,6 @@
 import * as validator from 'class-validator';
 import { ApiProperty } from "@nestjs/swagger";
+import { TD_Estado_Bus, TD_Estado_Ubicacion } from '@prisma/client';
 
 export class CreateBusDto {
     @ApiProperty({ required: true, example: 'GR1826' })
@@ -28,11 +29,11 @@ export class CreateBusDto {
     @validator.IsDate()
     fecha_hora_ultima_ubicacion: Date;
 
-    //@ApiProperty({ required: true, example: 'disponible' })
-    //estado_ubicacion: TD_Estado_Ubicacion;
+    @ApiProperty({ required: true, example: 'disponible' })
+    estado_ubicacion: TD_Estado_Ubicacion;
 
-    //@ApiProperty({ required: true, example: 'activo' })
-    //estado_bus: TD_Estado_Bus;
+    @ApiProperty({ required: true, example: 'activo' })
+    estado_bus: TD_Estado_Bus;
 
     @ApiProperty({ required: true, example: 'C0001' })
     @validator.IsString()

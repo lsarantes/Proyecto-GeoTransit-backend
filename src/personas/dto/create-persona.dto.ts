@@ -4,6 +4,7 @@ import { User } from "src/users/entities/user.entity";
 import { Telefono } from 'src/telefonos/entities/telefono.entity';
 import { Conductor } from 'src/conductores/entities/conductor.entity';
 import { Encargado_Cooperativa } from 'src/encargadoscooperativas/entities/Encargado_Cooperativa.entity';
+import { Role } from '@prisma/client';
 
 export class CreatePersonaDto {
     @ApiProperty({ required: true, example: 'P0013' })
@@ -46,10 +47,10 @@ export class CreatePersonaDto {
     @validator.IsDate()
     fecha_actualizada: Date;
     
-    //@ApiProperty({ required: false, example: 'PASAJERO' })
-    //role: Role;
+    @ApiProperty({ required: false, example: 'PASAJERO' })
+    role: Role;
     
-    @ApiProperty({ required: true })
+    @ApiProperty({ required: false, type: () => [Telefono] })
     telefonos: Telefono[];
     
     @ApiProperty({ required: false})

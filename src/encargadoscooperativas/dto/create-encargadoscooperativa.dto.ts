@@ -11,9 +11,6 @@ export class CreateEncargadoscooperativaDto {
     @validator.IsString()
     persona_id: string;
 
-    //@ApiProperty({ required: true })
-    //ruta_asignada cambiar por identities de rutas y es un arreglo
-
-    @ApiProperty({ required: true})
+    @ApiProperty({ required: false})
     cooperativas: Cooperativa[];  
 }
