@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
 }
 
 
@@ -140,7 +139,7 @@ model Cooperativa {
     destino_longitud Float
     fecha_creacion DateTime
     cooperativa Cooperativa_Ruta []
-    rutas RutaBahia[]
+    bahias RutaBahia[]
     alertas Alertas[]
   }
 
@@ -162,7 +161,7 @@ model Cooperativa {
     ubicacion_longitud Float
     url_foto String
     fecha_creada DateTime
-    bahias RutaBahia []
+    rutas RutaBahia []
     empleado_mti_id String
     empleado_mti Empleado_MTI @relation(fields: [empleado_mti_id], references: [id_empleado_mti])
     pasajeros Pasajero []
