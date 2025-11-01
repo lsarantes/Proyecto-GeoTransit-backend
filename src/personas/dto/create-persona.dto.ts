@@ -4,7 +4,7 @@ import { Telefono } from 'src/telefonos/entities/telefono.entity';
 import { Conductor } from 'src/conductores/entities/conductor.entity';
 import { Encargado_Cooperativa } from 'src/encargadoscooperativas/entities/Encargado_Cooperativa.entity';
 import { Role } from '@prisma/client';
-import { User } from 'src/Users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 
 export class CreatePersonaDto {
     @ApiProperty({ required: true, example: 'P0013' })

@@ -14,10 +14,11 @@ import { CooperativasRutasModule } from './cooperativas_rutas/cooperativas_rutas
 import { BahiasModule } from './bahias/bahias.module';
 import { RutasBahiasModule } from './rutas_bahias/rutas_bahias.module';
 import { AlertasModule } from './alertas/alertas.module';
-import { UsersModule } from './Users/users.module';
+import { UsersModule } from './users/users.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [UsersModule, BusesModule, CooperativasModule, PersonasModule, ConductoresModule, TelefonosModule, EncargadoscooperativasModule, EmpleadosMtiModule, PasajerosModule, RutasModule, CooperativasRutasModule, BahiasModule, RutasBahiasModule, AlertasModule],
+  imports: [UsersModule, BusesModule, CooperativasModule, PersonasModule, ConductoresModule, TelefonosModule, EncargadoscooperativasModule, EmpleadosMtiModule, PasajerosModule, RutasModule, CooperativasRutasModule, BahiasModule, RutasBahiasModule, AlertasModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })

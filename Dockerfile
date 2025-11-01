@@ -18,4 +18,4 @@ COPY nest-cli.json ./
 EXPOSE 3000
 
 # Comando para desarrollo
-CMD ["sh", "-c", "npx prisma generate && npm run start:dev"]
+CMD ["sh", "-c", "sleep infinity"]
