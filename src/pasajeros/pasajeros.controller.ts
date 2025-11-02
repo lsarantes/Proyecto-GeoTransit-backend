@@ -19,16 +19,16 @@ export class PasajerosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.pasajerosService.findOne(+id);
+    return this.pasajerosService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePasajeroDto: UpdatePasajeroDto) {
-    return this.pasajerosService.update(+id, updatePasajeroDto);
+    return this.pasajerosService.update(id, updatePasajeroDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.pasajerosService.remove(+id);
+    return this.pasajerosService.remove(id);
   }
 }

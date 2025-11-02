@@ -19,16 +19,16 @@ export class BahiasController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.bahiasService.findOne(+id);
+    return this.bahiasService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBahiaDto: UpdateBahiaDto) {
-    return this.bahiasService.update(+id, updateBahiaDto);
+    return this.bahiasService.update(id, updateBahiaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.bahiasService.remove(+id);
+    return this.bahiasService.remove(id);
   }
 }

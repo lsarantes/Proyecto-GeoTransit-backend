@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmpleadosMtiDto } from './dto/create-empleados-mti.dto';
 import { UpdateEmpleadosMtiDto } from './dto/update-empleados-mti.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class EmpleadosMtiService {
+
+  constructor( private readonly prisma: PrismaService) {}
+  
   create(createEmpleadosMtiDto: CreateEmpleadosMtiDto) {
-    return 'This action adds a new empleadosMti';
+    const { bahias, ...empleadoData } = createEmpleadosMtiDto;  
+    return this.prisma.empleado_MTI.create({ data: empleadoData });
   }
 
   findAll() {
-    return `This action returns all empleadosMti`;
+    return this.prisma.empleado_MTI.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} empleadosMti`;
+  findOne(id_empleado_mti: string) {
+    return this.prisma.empleado_MTI.findUnique({ where: { id_empleado_mti} });
   }
-
-  update(id: number, updateEmpleadosMtiDto: UpdateEmpleadosMtiDto) {
-    return `This action updates a #${id} empleadosMti`;
+  
+  update(id_empleado_mti: string, updateEmpleadosMtiDto: UpdateEmpleadosMtiDto) {
+    const { bahias, ...empleadoData } = updateEmpleadosMtiDto;  
+    return this.prisma.empleado_MTI.update({ where: { id_empleado_mti }, data: empleadoData, });
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} empleadosMti`;
+  
+  remove(id_empleado_mti: string) {
+    return this.prisma.empleado_MTI.delete({ where: { id_empleado_mti} });
   }
 }

@@ -19,16 +19,16 @@ export class CooperativasRutasController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.cooperativasRutasService.findOne(+id);
+    return this.cooperativasRutasService.findOne(id, id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCooperativasRutaDto: UpdateCooperativasRutaDto) {
-    return this.cooperativasRutasService.update(+id, updateCooperativasRutaDto);
+    return this.cooperativasRutasService.update(id, id, updateCooperativasRutaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.cooperativasRutasService.remove(+id);
+    return this.cooperativasRutasService.remove(id, id);
   }
 }

@@ -1,26 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRutasBahiaDto } from './dto/create-rutas_bahia.dto';
 import { UpdateRutasBahiaDto } from './dto/update-rutas_bahia.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class RutasBahiasService {
+
+  constructor( private readonly prisma: PrismaService) {}
+  
   create(createRutasBahiaDto: CreateRutasBahiaDto) {
-    return 'This action adds a new rutasBahia';
+    return this.prisma.rutaBahia.create({ data: createRutasBahiaDto});
   }
 
   findAll() {
-    return `This action returns all rutasBahias`;
+    return this.prisma.rutaBahia.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} rutasBahia`;
+  findOne(ruta_id: string, bahia_id: string) {
+    return this.prisma.rutaBahia.findUnique({ where: {ruta_id_bahia_id: {ruta_id, bahia_id} } });
   }
-
-  update(id: number, updateRutasBahiaDto: UpdateRutasBahiaDto) {
-    return `This action updates a #${id} rutasBahia`;
+  
+  update(ruta_id: string, bahia_id: string, updateRutasBahiaDto: UpdateRutasBahiaDto) {
+    return this.prisma.rutaBahia.update({ where: {ruta_id_bahia_id: {ruta_id, bahia_id} }, data: updateRutasBahiaDto });
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} rutasBahia`;
+  
+  remove(ruta_id: string, bahia_id: string) {
+    return this.prisma.rutaBahia.delete({ where: {ruta_id_bahia_id: {ruta_id, bahia_id} } });
   }
 }

@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCooperativaDto } from './dto/create-cooperativa.dto';
 import { UpdateCooperativaDto } from './dto/update-cooperativa.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CooperativasService {
+
+  constructor( private readonly prisma: PrismaService) {}
+
   create(createCooperativaDto: CreateCooperativaDto) {
-    return 'This action adds a new cooperativa';
+    const { ruta,  ...cooperativaData } = createCooperativaDto;
+   return this.prisma.cooperativa.create({ data: cooperativaData});
   }
 
   findAll() {
-    return `This action returns all cooperativas`;
+    return this.prisma.cooperativa.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cooperativa`;
+  findOne(nombre_cooperativa: string) {
+    return this.prisma.cooperativa.findUnique({where: { nombre_cooperativa}});
   }
 
-  update(id: number, updateCooperativaDto: UpdateCooperativaDto) {
-    return `This action updates a #${id} cooperativa`;
+  update(nombre_cooperativa: string, updateCooperativaDto: UpdateCooperativaDto) {
+    const { ruta,  ...cooperativaData } = updateCooperativaDto;
+    return this.prisma.cooperativa.update({ where: { nombre_cooperativa}, data: cooperativaData, });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cooperativa`;
+  remove(nombre_cooperativa: string) {
+    return this.prisma.cooperativa.delete({where: { nombre_cooperativa}});
   }
 }

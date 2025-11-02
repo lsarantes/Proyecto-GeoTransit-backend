@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateConductoreDto } from './dto/create-conductore.dto';
 import { UpdateConductoreDto } from './dto/update-conductore.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ConductoresService {
+
+  constructor( private readonly prisma: PrismaService) {}
+  
   create(createConductoreDto: CreateConductoreDto) {
-    return 'This action adds a new conductore';
+    const { buses_asignados, ...conductorData } = createConductoreDto;
+    return this.prisma.conductor.create({ data: conductorData });
   }
 
   findAll() {
-    return `This action returns all conductores`;
+    return this.prisma.conductor.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} conductore`;
+  findOne(id: string) {
+    return this.prisma.conductor.findUnique({where: { id }});
   }
 
-  update(id: number, updateConductoreDto: UpdateConductoreDto) {
-    return `This action updates a #${id} conductore`;
+  update(id: string, updateConductoreDto: UpdateConductoreDto) {
+    const { buses_asignados, ...conductorData } = updateConductoreDto;
+    return this.prisma.conductor.update({ where: { id }, data: conductorData, });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} conductore`;
+  remove(id: string) {
+    return this.prisma.conductor.delete({where: { id }});
   }
 }

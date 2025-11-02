@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEncargadoscooperativaDto } from './dto/create-encargadoscooperativa.dto';
 import { UpdateEncargadoscooperativaDto } from './dto/update-encargadoscooperativa.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class EncargadoscooperativasService {
+
+  constructor( private readonly prisma: PrismaService) {}
+  
   create(createEncargadoscooperativaDto: CreateEncargadoscooperativaDto) {
-    return 'This action adds a new encargadoscooperativa';
+    const { cooperativas, ...encargadoData } = createEncargadoscooperativaDto;
+    return this.prisma.encargado_Cooperativa.create({ data: encargadoData });
   }
 
   findAll() {
-    return `This action returns all encargadoscooperativas`;
+    return this.prisma.encargado_Cooperativa.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} encargadoscooperativa`;
+  findOne(id: string) {
+    return this.prisma.encargado_Cooperativa.findUnique({ where: { id } });
   }
-
-  update(id: number, updateEncargadoscooperativaDto: UpdateEncargadoscooperativaDto) {
-    return `This action updates a #${id} encargadoscooperativa`;
+  
+  update(id: string, updateEncargadoscooperativaDto: UpdateEncargadoscooperativaDto) {
+    const { cooperativas, ...encargadoData } = updateEncargadoscooperativaDto;
+    return this.prisma.encargado_Cooperativa.update({ where: { id }, data: encargadoData, });
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} encargadoscooperativa`;
+  
+  remove(id: string) {
+    return this.prisma.encargado_Cooperativa.delete({ where: { id } });
   }
 }
