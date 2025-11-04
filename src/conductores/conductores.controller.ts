@@ -19,16 +19,16 @@ export class ConductoresController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.conductoresService.findOne(+id);
+    return this.conductoresService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateConductoreDto: UpdateConductoreDto) {
-    return this.conductoresService.update(+id, updateConductoreDto);
+    return this.conductoresService.update(id, updateConductoreDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.conductoresService.remove(+id);
+    return this.conductoresService.remove(id);
   }
 }

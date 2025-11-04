@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBahiaDto } from './dto/create-bahia.dto';
 import { UpdateBahiaDto } from './dto/update-bahia.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class BahiasService {
+
+  constructor( private readonly prisma: PrismaService) {}
+
   create(createBahiaDto: CreateBahiaDto) {
-    return 'This action adds a new bahia';
+    const { rutas, pasajeros, ...bahiaData } = createBahiaDto;
+    return this.prisma.bahias.create({ data: bahiaData, });
   }
 
   findAll() {
-    return `This action returns all bahias`;
+    return this.prisma.bahias.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} bahia`;
+  findOne(nombre_bahia: string) {
+    return this.prisma.bahias.findUnique({where: { nombre_bahia }});
   }
 
-  update(id: number, updateBahiaDto: UpdateBahiaDto) {
-    return `This action updates a #${id} bahia`;
+  update(nombre_bahia: string, updateBahiaDto: UpdateBahiaDto) {
+    const { rutas, pasajeros,  ...bahiaData } = updateBahiaDto;
+    return this.prisma.bahias.update({where: { nombre_bahia }, data: bahiaData });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} bahia`;
+  remove(nombre_bahia: string) {
+    return this.prisma.bahias.delete({where: { nombre_bahia }});
   }
 }

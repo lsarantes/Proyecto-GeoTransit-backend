@@ -1,59 +1,152 @@
-
 # 💻 Proyecto GeoTransit — Backend
 
 ## 📝 Descripción general
 **GeoTransit — Backend**  
 API de transporte público y geolocalización desarrollada con **NestJS** y **PostgreSQL**, preparada para ejecutarse con **Docker Compose**.  
-Incluye instrucciones para desarrollo local, trabajo con contenedores remotos y flujo colaborativo con **Git Flow**.
+Incluye instrucciones para desarrollo local, trabajo con contenedores remotos (VS Code DevContainers) y flujo colaborativo con **Git Flow**.
 
 ---
 
-## ⚙️ Requisitos previos
-- Git (y opcionalmente `git-flow`).
-- Docker Desktop y Docker Compose (abiertos/activos).
-- (Opcional) Node.js y npm si querés ejecutar el proyecto **sin Docker**.
+## ⚙️ Requisitos previos (primera vez)
+Antes de empezar asegúrate de tener instaladas las siguientes herramientas:
+
+- **Git** (cliente).  
+- **Docker Desktop** (incluye Docker Engine y Docker Compose).  
+- **Visual Studio Code** + extensión **Dev Containers (Remote Development)** - muy recomendable si desea trabajar desde dentro del contenedor.  
+- (Opcional) **Node.js** y **npm** si querés ejecutar el proyecto sin Docker.
+
+> Nota: **No es necesario instalar Git dentro del contenedor**. Git se debe usar desde tu máquina local para evitar problemas de sincronización entre sistemas de archivos (Windows vs Linux).
 
 ---
 
-## 🚀 Inicio del proyecto (primera vez)
+## 🚀 Primer arranque (clonar y preparar el entorno)
 1. Clonar el repositorio:
 ```bash
 git clone git@github.com:lsarantes/Proyecto-GeoTransit-backend.git
 cd Proyecto-GeoTransit-backend
 ```
 
-2. Inicializar Git Flow (opcional):
+2. Crear archivo `.env` en la raíz (puede pedir datos al equipo):
+```env
+BACKEND_PORT=puerto_del_proyecto
+POSTGRES_USER= usuario_de_BD
+POSTGRES_PASSWORD=_Su_contraseña
+POSTGRES_DB=nombre_bd
+POSTGRES_HOST_PORT=puerto_de_postgres
+
+DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_HOST_PORT}/${POSTGRES_DB}
+```
+
+3. Inicializar Git Flow:
 ```bash
 git flow init
 ```
 
-3. Crear tu rama de trabajo (opcional / ejemplo con Git Flow):
+4. Levantar la base (Postgres) y el backend (modo desarrollo):
 ```bash
-git flow feature start nombre_de_tu_feature
-# al terminar:
-git flow feature finish nombre_de_tu_feature
+docker compose up --build -d
 ```
+> Alternativa: **Si se instaló la extensión de VS Code Remote Development**, podés abrir el contenedor desde VS Code y trabajar desde allí.
+
+5. Generar Prisma Client, aplicar migraciones y cargar seed (puede ejecutarse en el contenedor backend):
+```bash
+# dentro de la máquina local usando docker compose exec
+docker compose exec geo-transit-backend sh -c "npm install && npx prisma generate && npx prisma migrate deploy && npx prisma db seed"
+```
+> Alternativa con VS Code Dev Container: ejecutá paso a paso en la terminal del contenedor `npx prisma generate`, `npx prisma migrate deploy`, `npx prisma db seed`.
 
 ---
 
-# 🧭 Git Flow — tipos de ramas (con comandos para iniciar y finalizar)
+### Volúmenes y `node_modules`
+- Para evitar que el montaje de la carpeta local sobrescriba `node_modules` instalados en la imagen, usamos un volumen separado para `node_modules`:
+```yaml
+volumes:
+  - ".:/src/app/nestjs"
+  - /src/app/nestjs/node_modules
+```
+- Esto mantiene las dependencias dentro del contenedor sin mezclarlas con la carpeta local.
 
+---
+
+### Prisma — migraciones y seed (recordatorio)
+- Aplicar migraciones existentes:
+```bash
+npx prisma migrate deploy
+```
+- Cargar seed:
+```bash
+npx prisma db seed
+```
+- Generar cliente:
+```bash
+npx prisma generate
+```
+
+Comandos también se pueden ejecutar dentro del contenedor con `docker compose exec`.
+
+---
+
+## 🧭 Git Flow — tipos de ramas (resumen)
 | Tipo | Prefijo | Propósito | Iniciar | Finalizar |
-|---|---:|---|---:|---:|
+|---|---:|---|---:|---|
 | `main` | (ninguno) | Código estable / producción | — | — |
 | `develop` | (ninguno) | Integración / desarrollo | — | — |
 | `feature/*` | `feature/` | Nueva funcionalidad | `git flow feature start <nombre>` | `git flow feature finish <nombre>` |
 | `release/*` | `release/` | Preparación de versión | `git flow release start <versión>` | `git flow release finish <versión>` |
 | `hotfix/*` | `hotfix/` | Corrección urgente sobre `main` | `git flow hotfix start <nombre>` | `git flow hotfix finish <nombre>` |
-| `bugfix/*` | `bugfix/` | Arreglos menores (sobre `develop` o `feature`) | `git checkout -b bugfix/<nombre> develop` | `git checkout develop && git merge bugfix/<nombre> && git branch -d bugfix/<nombre>` |
-
-> **Nota breve:** `main` contiene la versión en producción; `develop` es para integración diaria. Los prefijos (`feature/`, `hotfix/`, etc.) ayudan a identificar la finalidad de la rama.
+| `bugfix/*` | `bugfix/` | Arreglos menores | `git checkout -b bugfix/<nombre> develop` | `git checkout develop && git merge bugfix/<nombre> && git branch -d bugfix/<nombre>` |
 
 ---
 
-## 🐳 Docker — levantar la stack
+## ℹ️ Comandos que se pueden ejecutar **más de una vez** (rápido)
 
-- Levantar en primer plano (ver logs):
+- Instalar dependencias:
+```bash
+npm install
+# dentro del contenedor (si está levantado)
+docker compose exec geo-transit-backend sh -c "npm install"
+# si el servicio está apagado (contenedor temporal)
+docker compose run --rm geo-transit-backend sh -c "npm install"
+```
+
+- Generar recursos con Nest (scaffold):
+```bash
+npx nest generate resource <nombre> [--no-spec]
+```
+
+- Regenerar Prisma Client (cuando cambias schema):
+```bash
+npx prisma generate
+docker compose exec geo-transit-backend sh -c "npx prisma generate"
+```
+
+- Aplicar migraciones existentes (deploy / al traer migraciones nuevas):
+```bash
+npx prisma migrate deploy
+docker compose exec geo-transit-backend sh -c "npx prisma migrate deploy"
+```
+
+- Crear/aplicar migración en dev:
+```bash
+npx prisma migrate dev --name <nombre_migracion>
+```
+
+- Cargar seed:
+```bash
+npx prisma db seed
+docker compose exec geo-transit-backend sh -c "npx prisma db seed"
+```
+
+- Iniciar en modo dev (hot-reload):
+```bash
+npm run start:dev
+docker compose exec geo-transit-backend sh -c "npm run start:dev"
+```
+
+---
+
+## 🐳 Docker — comandos y notas (ayuda)
+- Levantar en foreground (ver logs):
 ```bash
 docker compose up
 ```
@@ -70,41 +163,36 @@ docker compose up --build
 docker compose up --build -d
 ```
 
-**Cuándo usar cada uno**
-- `up`: ver logs en tiempo real (útil para debugging).
-- `up -d`: dejar servicios corriendo en segundo plano (útil en desarrollo/CI).
-- `up --build`: cuando cambias el `Dockerfile` o dependencias y querés una imagen nueva.
+**Cuándo usar**:
+- `up` → ver logs y fallos en tiempo real.
+- `up -d` → dejar servicios corriendo en segundo plano.
+- `up --build` → cuando cambias `Dockerfile` o dependencias.
 
 ---
 
-## 🔄 Ejecutar comandos dentro del contenedor
-
-### Cuando el servicio **está apagado**
-- Ejecutar una tarea puntual sin levantar la stack completa:
+## 🔄 Ejecutar comandos dentro del contenedor (ayuda)
+### Servicio apagado (tarea puntual)
 ```bash
 docker compose run --rm geo-transit-backend sh -c "npm install"
 ```
-`docker compose run` crea un contenedor temporal para ejecutar el comando; `--rm` lo borra al terminar.
 
-### Cuando el servicio **está levantado**
-- Ejecutar comandos dentro del contenedor en ejecución (por nombre de servicio):
+### Servicio en ejecución
 ```bash
-docker compose exec geo-transit-backend sh -c "npm install"
-```
-- O usando el nombre del contenedor:
-```bash
-docker exec -it nestjs-api-geotransit sh -c "npx prisma generate"
+docker compose exec geo-transit-backend sh -c "npx prisma generate"
+# o
+docker exec -it nestjs-api-geotransit sh
+# dentro del shell:
+npx prisma generate
 ```
 
-**Regla práctica**
-- Servicio levantado → `docker compose exec` o `docker exec -it`.
+**Regla práctica**:
+- Servicio levantado → `docker compose exec` / `docker exec -it`.
 - Servicio apagado y querés ejecutar algo puntual → `docker compose run --rm`.
 
 ---
 
-## 🧹 Docker — detener y limpiar (contenedores, volúmenes, imágenes)
-
-> ⚠️ **Advertencia:** Eliminar volúmenes borra datos persistentes (p.ej. la DB). Hacé backup si hace falta.
+## 🧹 Detener y limpiar (contenedores, volúmenes, imágenes)
+> ⚠️ Eliminar volúmenes borra datos persistentes (DB). Hacé backup si hace falta.
 
 - Detener (no elimina):
 ```bash
@@ -121,111 +209,77 @@ docker compose down
 docker compose down --volumes
 ```
 
-- Bajar y eliminar contenedores, redes, volúmenes y las imágenes locales construidas:
+- Bajar y eliminar contenedores, redes, volúmenes e imágenes locales construidas:
 ```bash
 docker compose down --volumes --rmi local
-```
-
-- Bajar y eliminar todo (incluye imágenes usadas por el compose):
-```bash
-docker compose down --volumes --rmi all
-```
-
-- Parar y eliminar un contenedor por nombre:
-```bash
-docker stop nestjs-api-geotransit
-docker rm nestjs-api-geotransit
-```
-
-- Eliminar una imagen:
-```bash
-docker rmi <nombre_o_id_de_imagen>
-```
-
-- Eliminar volúmenes:
-```bash
-docker volume ls
-docker volume rm postgres_data
 ```
 
 - Limpieza general:
 ```bash
 docker system prune --volumes
-# más agresivo:
+# o más agresivo:
 docker system prune -a --volumes
 ```
 
 ---
 
-## 🔤 Abreviaciones / flags comunes (breve)
+## ⚠️ Problemas comunes y soluciones rápidas
 
-- `-d` → detached (ej. `docker compose up -d`): ejecutar en segundo plano.  
-- `-it` → `-i` (interactive) + `-t` (tty): abrir shell interactivo (`docker exec -it ...`).  
-- `sh` → shell básico (ej.: `sh -c "cmd1 && cmd2"`).  
-- `-c` → indica al shell que ejecute la cadena de comandos que sigue.  
-- `--rm` → eliminar contenedor al terminar (ej. `docker compose run --rm`).  
-- `--build` → reconstruir imagen antes de levantar (`docker compose up --build`).  
-- `--volumes` → eliminar volúmenes al hacer `down`.  
-- `--rmi local|all` → eliminar imágenes locales o todas.  
-- En Git: `-m` (mensaje en `git commit -m`), `-u` (establecer upstream en `git push -u origin <rama>`).
-
----
-
-## 🧱 Variables de entorno — `.env` (crear en la raíz)
-Crea un archivo `.env` con estas variables (pueden quedar sin valor para que el equipo las complete):
-
-```env
-# Puerto backend
-BACKEND_PORT=3000
-
-# Configuración de la base de datos
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-POSTGRES_HOST_PORT=5432
-
-# Prisma
-DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-geotransit:5432/${POSTGRES_DB}?schema=public
+### `node_modules` no encontrado
+- Local:
+```bash
+npm install
+```
+- En contenedor (servicio en ejecución):
+```bash
+docker compose exec geo-transit-backend sh -c "npm install"
 ```
 
-> Pide al administrador las credenciales reales o completalas según entorno.
+### Prisma client out-of-sync
+```bash
+npx prisma generate
+# o dentro del contenedor:
+docker compose exec geo-transit-backend sh -c "npx prisma generate"
+```
 
----
+### Problemas con mayúsculas/minúsculas (casing)
+- Linux es case-sensitive. Si ves errores como:
+```
+Already included file name ... differs from file name ... only in casing
+```
+Significa que hay imports que usan `Users` y archivos que están en `users`. Solución:
+1. Homogeneizar nombres de carpetas (recomendado: usar **minúsculas**).
+2. Buscar referencias:
+```bash
+grep -r "Users" src/
+```
+3. Reemplazar e incluso forzar a Git a reconocer el cambio:
+```bash
+git mv src/Users src/users   # si git aún conserva el nombre "Users"
+git commit -m "Fix folder casing users"
+```
+4. Borrar caches:
+```bash
+rm -rf dist
+rm -f tsconfig.tsbuildinfo
+```
 
-## 🧩 Prisma — errores comunes y migraciones (breve)
-
-- **Prisma client out-of-sync**: ocurre si cambias `schema.prisma` y no regenerás el cliente.  
-  - Regenerar local:
-    ```bash
-    npx prisma generate
-    ```
-  - Regenerar dentro del contenedor (servicio levantado):
-    ```bash
-    docker compose exec geo-transit-backend sh -c "npx prisma generate"
-    ```
-  - Si el servicio está apagado y hacés puntual:
-    ```bash
-    docker compose run --rm geo-transit-backend sh -c "npx prisma generate"
-    ```
-
-- **Migraciones**
-  - Crear migración (dev):
-    ```bash
-    npx prisma migrate dev --name <nombre_migracion>
-    ```
-  - Aplicar migraciones (dev):
-    ```bash
-    npx prisma migrate dev
-    ```
-  - Aplicar migraciones (producción):
-    ```bash
-    npx prisma migrate deploy
-    ```
+### Line endings (CRLF vs LF)
+Si trabajás entre Windows y Linux, configurá:
+- `.gitattributes` en el repo:
+```
+* text=auto
+*.ts text eol=lf
+*.json text eol=lf
+```
+- En tu máquina:
+```bash
+git config --global core.autocrlf input
+```
 
 ---
 
 ## 🧰 Comandos básicos de Git (rápido)
-
 - Clonar:
 ```bash
 git clone <url>
@@ -242,11 +296,11 @@ git add .
 ```bash
 git commit -m "Mensaje descriptivo"
 ```
-- Traer y fusionar cambios remotos:
+- Traer y fusionar:
 ```bash
 git pull
 ```
-- Enviar cambios:
+- Enviar:
 ```bash
 git push
 ```
@@ -254,140 +308,18 @@ git push
 ```bash
 git checkout -b nombre_rama
 ```
-- Fusionar:
-```bash
-git checkout develop
-git merge feature/mi-feature
-```
-- Establecer upstream en primer push:
+- Establecer upstream:
 ```bash
 git push -u origin nombre_rama
 ```
 
 ---
 
-## 🧪 Ejemplos prácticos (errores frecuentes y solución rápida)
-
-- **`node_modules` no encontrado**
-  - Local:
-    ```bash
-    npm install
-    ```
-  - En contenedor (servicio apagado):
-    ```bash
-    docker compose run --rm geo-transit-backend sh -c "npm install"
-    ```
-  - En contenedor (servicio levantado):
-    ```bash
-    docker compose exec geo-transit-backend sh -c "npm install"
-    # o
-    docker exec -it nestjs-api-geotransit sh -c "npm install"
-    ```
-
-- **Prisma client / enums / tablas faltan**
-  - Regenerar cliente:
-    ```bash
-    npx prisma generate
-    # o dentro del contenedor:
-    docker compose exec geo-transit-backend sh -c "npx prisma generate"
-    ```
-
----
-
-## 🔧 Dockerfile (tu configuración — con breve explicación)
-```dockerfile
-# Imagen base de Node.js
-FROM node:22.11.0
-
-# Crear directorio de trabajo
-WORKDIR /src/app/nestjs
-
-# Copiar package.json y package-lock.json
-COPY package*.json ./
-
-# Instalar dependencias
-RUN npm install
-
-# Copiar archivos de configuración
-COPY tsconfig.json ./
-COPY nest-cli.json ./
-
-# Exponer puerto
-EXPOSE 3000
-
-# Comando para desarrollo
-CMD ["sh", "-c", "npx prisma generate && npm run start:dev"]
-```
-
-> **Sugerencia:** es preferible generar `prisma generate` durante el `build` (`RUN npx prisma generate`) para evitar hacerlo en `CMD`, pero el `CMD` actual funciona para desarrollo. Si querés, te puedo ajustar el Dockerfile.
-
----
-
-## 🗂 docker-compose (fragmento importante)
-```yaml
-services:
-  geo-transit-backend:
-    container_name: nestjs-api-geotransit
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "${BACKEND_PORT}:3000"
-    volumes:
-      - ".:/src/app/nestjs"
-    depends_on:
-      - postgres
-    env_file:
-      - .env
-  postgres:
-    container_name: postgres-geotransit
-    image: postgres:16
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "${POSTGRES_HOST_PORT}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
-```
-
----
-
-## 🧾 .dockerignore (recomendado)
-```text
-node_modules
-/dist
-/build
-logs
-*.log
-npm-debug.log*
-.vscode/*
-.env
-.env.*.local
-/temp
-.tmp
-pids
-*.pid
-coverage
-```
-
----
-
-## 🧩 VS Code — extensión recomendada (Remote)
-Instalar: **Remote Development** (pack) o la extensión **Dev Containers (Remote - Containers)** (`ms-vscode-remote.remote-containers`).  
-- Permite: **adjuntar VS Code al contenedor**, editar y ejecutar terminal dentro del contenedor sin instalar dependencias localmente.
-
----
-
 ## ✅ Resumen / Cheatsheet rápida
-- Levantar en foreground: `docker compose up`  
-- Levantar en background: `docker compose up -d`  
-- Ejecutar tarea puntual en contenedor apagado: `docker compose run --rm geo-transit-backend sh -c "..."`  
-- Ejecutar dentro de contenedor en ejecución: `docker compose exec geo-transit-backend sh -c "..."`  
-- Limpiar todo (volúmenes e imágenes): `docker compose down --volumes --rmi all`  
-- Regenerar Prisma: `npx prisma generate` (o dentro del contenedor con `docker compose exec ...`)
+- Levantar: `docker compose up`  
+- Levantar background: `docker compose up -d`  
+- Reconstruir: `docker compose up --build`  
+- Ejecutar tarea puntual (contenedor apagado): `docker compose run --rm geo-transit-backend sh -c "..."`  
+- Ejecutar dentro del contenedor (corriendo): `docker compose exec geo-transit-backend sh -c "..."`  
+- Limpiar todo: `docker compose down --volumes --rmi all`  
+- Regenerar Prisma: `npx prisma generate` (o `docker compose exec ...`)

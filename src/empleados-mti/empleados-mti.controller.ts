@@ -19,16 +19,16 @@ export class EmpleadosMtiController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.empleadosMtiService.findOne(+id);
+    return this.empleadosMtiService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEmpleadosMtiDto: UpdateEmpleadosMtiDto) {
-    return this.empleadosMtiService.update(+id, updateEmpleadosMtiDto);
+    return this.empleadosMtiService.update(id, updateEmpleadosMtiDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.empleadosMtiService.remove(+id);
+    return this.empleadosMtiService.remove(id);
   }
 }

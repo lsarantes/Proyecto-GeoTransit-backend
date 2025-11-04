@@ -5,7 +5,7 @@ import { Cooperativa } from 'src/cooperativas/entities/cooperativa.entity';
 export class CreateEncargadoscooperativaDto {   
     @ApiProperty({ required: true, example: 'EC001' })
     @validator.IsString()
-    id: String;
+    id: string;
 
     @ApiProperty({ required: true, example: 'P0024' })
     @validator.IsString()

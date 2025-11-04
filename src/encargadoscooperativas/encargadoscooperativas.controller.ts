@@ -19,16 +19,16 @@ export class EncargadoscooperativasController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.encargadoscooperativasService.findOne(+id);
+    return this.encargadoscooperativasService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEncargadoscooperativaDto: UpdateEncargadoscooperativaDto) {
-    return this.encargadoscooperativasService.update(+id, updateEncargadoscooperativaDto);
+    return this.encargadoscooperativasService.update(id, updateEncargadoscooperativaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.encargadoscooperativasService.remove(+id);
+    return this.encargadoscooperativasService.remove(id);
   }
 }

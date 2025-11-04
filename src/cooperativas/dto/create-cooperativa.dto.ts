@@ -36,7 +36,7 @@ export class CreateCooperativaDto {
     fecha_de_creacion: Date;
 
     @ApiProperty({ required: true, example: 1, description: 'ID del encargado' })
-    id_encargado: number;   
+    id_encargado: string;   
     
     @ApiProperty({ required: false, example: 'Ruta A' })
     ruta: CooperativasRuta[];

@@ -3,8 +3,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Telefono } from 'src/telefonos/entities/telefono.entity';
 import { Conductor } from 'src/conductores/entities/conductor.entity';
 import { Encargado_Cooperativa } from 'src/encargadoscooperativas/entities/Encargado_Cooperativa.entity';
-import { Role } from '@prisma/client';
-import { User } from 'src/Users/entities/user.entity';
+import { Empleado_MTI, Pasajero, Role } from '@prisma/client';
+import { User } from 'src/users/entities/user.entity';
 
 export class CreatePersonaDto {
     @ApiProperty({ required: true, example: 'P0013' })
@@ -60,5 +60,5 @@ export class CreatePersonaDto {
     conductor?: Conductor;
 
     @ApiProperty({ required: false})
-    encargado_cooperativa?: Encargado_Cooperativa;
+    encargado_cooperativa?: Encargado_Cooperativa;   
 }

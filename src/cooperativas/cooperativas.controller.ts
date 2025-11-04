@@ -19,16 +19,16 @@ export class CooperativasController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.cooperativasService.findOne(+id);
+    return this.cooperativasService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCooperativaDto: UpdateCooperativaDto) {
-    return this.cooperativasService.update(+id, updateCooperativaDto);
+    return this.cooperativasService.update(id, updateCooperativaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.cooperativasService.remove(+id);
+    return this.cooperativasService.remove(id);
   }
 }

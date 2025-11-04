@@ -19,16 +19,16 @@ export class RutasBahiasController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.rutasBahiasService.findOne(+id);
+    return this.rutasBahiasService.findOne(id, id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRutasBahiaDto: UpdateRutasBahiaDto) {
-    return this.rutasBahiasService.update(+id, updateRutasBahiaDto);
+    return this.rutasBahiasService.update(id, id, updateRutasBahiaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.rutasBahiasService.remove(+id);
+    return this.rutasBahiasService.remove(id, id);
   }
 }
