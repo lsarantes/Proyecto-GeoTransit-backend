@@ -16,9 +16,10 @@ import { RutasBahiasModule } from './rutas_bahias/rutas_bahias.module';
 import { AlertasModule } from './alertas/alertas.module';
 import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UsersModule, BusesModule, CooperativasModule, PersonasModule, ConductoresModule, TelefonosModule, EncargadoscooperativasModule, EmpleadosMtiModule, PasajerosModule, RutasModule, CooperativasRutasModule, BahiasModule, RutasBahiasModule, AlertasModule, PrismaModule],
+  imports: [UsersModule, BusesModule, CooperativasModule, PersonasModule, ConductoresModule, TelefonosModule, EncargadoscooperativasModule, EmpleadosMtiModule, PasajerosModule, RutasModule, CooperativasRutasModule, BahiasModule, RutasBahiasModule, AlertasModule, PrismaModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

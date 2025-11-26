@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ConductoresService } from './conductores.service';
 import { CreateConductoreDto } from './dto/create-conductore.dto';
 import { UpdateConductoreDto } from './dto/update-conductore.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('conductores')
+@UseGuards(JwtAuthGuard)
 export class ConductoresController {
   constructor(private readonly conductoresService: ConductoresService) {}
 

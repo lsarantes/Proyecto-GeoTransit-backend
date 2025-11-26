@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { EncargadoscooperativasService } from './encargadoscooperativas.service';
 import { CreateEncargadoscooperativaDto } from './dto/create-encargadoscooperativa.dto';
 import { UpdateEncargadoscooperativaDto } from './dto/update-encargadoscooperativa.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('encargadoscooperativas')
+@UseGuards(JwtAuthGuard)
 export class EncargadoscooperativasController {
   constructor(private readonly encargadoscooperativasService: EncargadoscooperativasService) {}
 

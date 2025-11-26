@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { EmpleadosMtiService } from './empleados-mti.service';
 import { CreateEmpleadosMtiDto } from './dto/create-empleados-mti.dto';
 import { UpdateEmpleadosMtiDto } from './dto/update-empleados-mti.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('empleados-mti')
+@UseGuards(JwtAuthGuard)
 export class EmpleadosMtiController {
   constructor(private readonly empleadosMtiService: EmpleadosMtiService) {}
 

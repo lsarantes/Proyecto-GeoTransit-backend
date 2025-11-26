@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "${BACKEND_PORT}:3000"
+      - "${BACKEND_PORT}:4000"
     volumes:
       - ".:/src/app/nestjs"
       - /src/app/nestjs/node_modules

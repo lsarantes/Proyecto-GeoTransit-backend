@@ -114,21 +114,10 @@ docker compose run --rm geo-transit-backend sh -c "npm install"
 npx nest generate resource <nombre> [--no-spec]
 ```
 
-- Regenerar Prisma Client (cuando cambias schema):
-```bash
-npx prisma generate
-docker compose exec geo-transit-backend sh -c "npx prisma generate"
-```
-
 - Aplicar migraciones existentes (deploy / al traer migraciones nuevas):
 ```bash
 npx prisma migrate deploy
 docker compose exec geo-transit-backend sh -c "npx prisma migrate deploy"
-```
-
-- Crear/aplicar migración en dev:
-```bash
-npx prisma migrate dev --name <nombre_migracion>
 ```
 
 - Cargar seed:
@@ -136,6 +125,20 @@ npx prisma migrate dev --name <nombre_migracion>
 npx prisma db seed
 docker compose exec geo-transit-backend sh -c "npx prisma db seed"
 ```
+
+- Regenerar Prisma Client (cuando cambias schema):
+```bash
+npx prisma generate
+docker compose exec geo-transit-backend sh -c "npx prisma generate"
+```
+
+
+- Crear/aplicar migración en dev:
+```bash
+npx prisma migrate dev --name <nombre_migracion>
+```
+
+
 
 - Iniciar en modo dev (hot-reload):
 ```bash
