@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  geo-transit-backend:
+    # Uncomment if you want to override the service's Dockerfile to one in the .devcontainer 
+    # folder. The path is relative to el docker-compose principal.
+    #
+    # build:
+    #   context: .
+    #   dockerfile: .devcontainer/Dockerfile
+
+    volumes:
+      # Carpeta de trabajo montada para VS Code
+      - ..:/workspaces:cached
+
+    # Opcional, para depuradores que necesitan ptrace
+    # cap_add:
+    #   - SYS_PTRACE
+    # security_opt:
+    #   - seccomp:unconfined
+
+    # Mantener contenedor activo para VS Code
+    command: sleep infinity
