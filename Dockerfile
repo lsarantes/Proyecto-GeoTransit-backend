@@ -15,13 +15,12 @@ RUN npm install
 COPY prisma ./prisma
 
 # 🚨 Generar el cliente de Prisma para que TypeScript lo encuentre
-# Esto también garantiza que los archivos binarios necesarios estén en node_modules
 RUN npx prisma generate
 
 # Copiar el resto del código fuente
 COPY . .
 
-# Compilar el proyecto NestJS (ahora con los typings de Prisma disponibles)
+# Compilar el proyecto NestJS (debe compilar todos los archivos, incluyendo seed.ts a dist/seed.js)
 RUN npm run build
 
 # ------------------------------------
@@ -29,28 +28,23 @@ RUN npm run build
 # ------------------------------------
 FROM node:22.11.0-slim
 
+# 🚨 CORRECCIÓN OPENSSL: Instalar OpenSSL para permitir conexiones SSL/TLS de Prisma a Render DB
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 # Crear y establecer directorio de trabajo
 WORKDIR /usr/src/app
 
 # Copiar solo los archivos esenciales para la ejecución
-# 1. package.json para poder usar 'npm run start' y 'npx'
 COPY --from=builder /src/app/nestjs/package.json ./package.json
-
-# 2. node_modules (dependencias de producción, incluyendo el cliente de Prisma binario)
-# Esta es la línea que debe copiar lo necesario para el cliente
 COPY --from=builder /src/app/nestjs/node_modules ./node_modules
-
-# 3. El código compilado
 COPY --from=builder /src/app/nestjs/dist ./dist
-
-# 4. Archivos de Prisma necesarios (schema y migrations)
 COPY --from=builder /src/app/nestjs/prisma ./prisma
-
-# 🚨 LÍNEA FALLIDA ELIMINADA: Ya no se copia la carpeta .prisma de la raíz
+COPY --from=builder /src/app/nestjs/.prisma ./.prisma
 
 # Exponer el puerto
 EXPOSE 3000 
 
-# Comando Final de Arranque (Entrypoint) - Con generación, migración y seed
-# La regeneración sigue siendo útil para verificar que el cliente usa el binario correcto
-CMD [ "sh", "-c", "npx prisma generate && npx prisma migrate deploy && npx prisma db seed && npm run start" ]
+# Comando Final de Arranque (Entrypoint)
+# 🚨 CORRECCIÓN TS-NODE: Ejecutar el seed con node para evitar la dependencia de ts-node en producción.
+# ¡Esto asume que tu seed compilado se llama dist/seed.js!
+CMD [ "sh", "-c", "npx prisma generate && npx prisma migrate deploy && node dist/seed.js && npm run start" ]
