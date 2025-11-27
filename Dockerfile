@@ -9,15 +9,19 @@ WORKDIR /src/app/nestjs
 COPY package*.json ./
 
 # Instalar dependencias
-# Usar 'npm ci' si tienes package-lock.json para instalaciones limpias y reproducibles
 RUN npm install
 
-# Copiar el resto del código fuente (incluyendo el directorio 'prisma' y migraciones)
+# Copiar el esquema de Prisma para generar el cliente
+COPY prisma ./prisma
+
+# 🚨 CORRECCIÓN CLAVE: Generar el cliente de Prisma para que TypeScript lo encuentre
+# Esto crea el @prisma/client con los tipos de tus modelos/enums.
+RUN npx prisma generate
+
+# Copiar el resto del código fuente
 COPY . .
 
-# Compilar el proyecto NestJS
-# ¡IMPORTANTE! El proceso 'npm run build' también genera el Prisma Client,
-# pero lo regeneraremos en el Stage 2 para mayor seguridad.
+# Compilar el proyecto NestJS (ahora con los typings de Prisma disponibles)
 RUN npm run build
 
 # ------------------------------------
@@ -29,30 +33,14 @@ FROM node:22.11.0-slim
 WORKDIR /usr/src/app
 
 # Copiar solo los archivos esenciales para la ejecución
-# 1. package.json para poder usar 'npm run start' y 'npx'
 COPY --from=builder /src/app/nestjs/package.json ./package.json
-
-# 2. node_modules (dependencias de producción)
 COPY --from=builder /src/app/nestjs/node_modules ./node_modules
-
-# 3. El código compilado
 COPY --from=builder /src/app/nestjs/dist ./dist
-
-# 4. Archivos de Prisma necesarios para las migraciones, generación y el seeding
-# Copia el esquema de prisma y el directorio de migraciones
 COPY --from=builder /src/app/nestjs/prisma ./prisma
-
-# 5. El Cliente de Prisma generado (binarios y archivos de conexión)
-# Esto es CRÍTICO para que NestJS pueda interactuar con la DB
 COPY --from=builder /src/app/nestjs/.prisma ./.prisma
 
 # Exponer el puerto
 EXPOSE 3000 
 
-# Comando Final de Arranque (Entrypoint)
-# Se usa 'sh -c' para encadenar cuatro comandos:
-# 1. npx prisma generate: Asegura que el cliente binario sea correcto para este entorno.
-# 2. npx prisma migrate deploy: Aplica las migraciones pendientes.
-# 3. npx prisma db seed: Población inicial de datos.
-# 4. npm run start: Inicia la aplicación NestJS.
+# Comando Final de Arranque (Entrypoint) - Con generación, migración y seed
 CMD [ "sh", "-c", "npx prisma generate && npx prisma migrate deploy && npx prisma db seed && npm run start" ]
