@@ -1,40 +1,41 @@
-import * as validator from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { CooperativasRuta } from 'src/cooperativas_rutas/entities/cooperativas_ruta.entity';
-import { RutasBahia } from 'src/rutas_bahias/entities/rutas_bahia.entity';
-import { Alerta } from 'src/alertas/entities/alerta.entity';
+import { IsString, IsNotEmpty, IsNumber, IsArray, IsOptional, IsDateString } from 'class-validator';
 
 export class CreateRutaDto {
-  @ApiProperty({ required: true, example: '117' })
-  @validator.IsString()
-  nombre_ruta: string;
+  @IsString()
+  @IsNotEmpty()
+  id: string; // PK Manual (Ej: "104", "110", "MR-01")
 
-  @ApiProperty({ required: true, example: 12.115 })
-  @validator.IsNumber()
+  @IsString()
+  @IsNotEmpty()
+  nombre_ruta: string; // Nombre descriptivo "Ruta 104 - UCA"
+
+  @IsNumber()
   origen_latitud: number;
 
-  @ApiProperty({ required: true, example: -86.237 })
-  @validator.IsNumber()
+  @IsNumber()
   origen_longitud: number;
 
-  @ApiProperty({ required: true, example: 12.09 })
-  @validator.IsNumber()
+  @IsNumber()
   destino_latitud: number;
 
-  @ApiProperty({ required: true, example: -86.27 })
-  @validator.IsNumber()
+  @IsNumber()
   destino_longitud: number;
 
-  @ApiProperty({ required: true, type: 'string', format: 'date-time' })
-  @validator.IsDateString()
-  fecha_creacion: Date;
+  @IsDateString()
+  fecha_creacion: string;
 
-  @ApiProperty({ required: false })
-  cooperativa: CooperativasRuta[];
+  // --- RELACIONES N:N ---
+  
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  cooperativasIds?: string[]; // IDs de las cooperativas
 
-  @ApiProperty({ required: false })
-  bahias: RutasBahia[];
-
-  @ApiProperty({ required: false })
-  alertas: Alerta[];
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  bahiasIds?: string[]; // IDs de las bahías
 }
+
+import { PartialType } from '@nestjs/mapped-types';
+export class UpdateRutaDto extends PartialType(CreateRutaDto) {}

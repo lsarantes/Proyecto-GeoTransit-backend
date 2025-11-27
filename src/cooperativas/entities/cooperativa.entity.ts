@@ -1,5 +1,3 @@
-import { CooperativasRuta } from "src/cooperativas_rutas/entities/cooperativas_ruta.entity";
-
 export class Cooperativa {
     nombre_cooperativa: string; 
     direccion: string;
@@ -11,4 +9,8 @@ export class Cooperativa {
     fecha_de_creacion: Date;
     id_encargado: string;
     ruta: CooperativasRuta[];
+}
+export class CooperativasRuta {
+    cooperativa_id: string; 
+    ruta_id: string;
 }

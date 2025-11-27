@@ -1,36 +1,35 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { CooperativasService } from './cooperativas.service';
-import { CreateCooperativaDto } from './dto/create-cooperativa.dto';
-import { UpdateCooperativaDto } from './dto/update-cooperativa.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CreateCooperativaDto, UpdateCooperativaDto } from './dto/create-cooperativa.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'; // Asumiendo que tienes Auth
+import { CooperativaService } from './cooperativas.service';
 
-@Controller('cooperativas')
-@UseGuards(JwtAuthGuard)
-export class CooperativasController {
-  constructor(private readonly cooperativasService: CooperativasService) {}
+@UseGuards(JwtAuthGuard) // Protegemos todo el controlador
+@Controller('cooperativa')
+export class CooperativaController {
+  constructor(private readonly cooperativaService: CooperativaService) {}
 
   @Post()
   create(@Body() createCooperativaDto: CreateCooperativaDto) {
-    return this.cooperativasService.create(createCooperativaDto);
+    return this.cooperativaService.create(createCooperativaDto);
   }
 
   @Get()
   findAll() {
-    return this.cooperativasService.findAll();
+    return this.cooperativaService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.cooperativasService.findOne(id);
+    return this.cooperativaService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCooperativaDto: UpdateCooperativaDto) {
-    return this.cooperativasService.update(id, updateCooperativaDto);
+    return this.cooperativaService.update(id, updateCooperativaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.cooperativasService.remove(id);
+    return this.cooperativaService.remove(id);
   }
 }

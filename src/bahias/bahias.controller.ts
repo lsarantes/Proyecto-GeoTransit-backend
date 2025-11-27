@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { BahiasService } from './bahias.service';
+import { BahiaService } from './bahias.service';
 import { CreateBahiaDto } from './dto/create-bahia.dto';
 import { UpdateBahiaDto } from './dto/update-bahia.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -7,7 +7,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @Controller('bahias')
 @UseGuards(JwtAuthGuard)
 export class BahiasController {
-  constructor(private readonly bahiasService: BahiasService) {}
+  constructor(private readonly bahiasService: BahiaService) {}
 
   @Post()
   create(@Body() createBahiaDto: CreateBahiaDto) {

@@ -1,13 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { RutasService } from './rutas.service';
+
 import { CreateRutaDto } from './dto/create-ruta.dto';
 import { UpdateRutaDto } from './dto/update-ruta.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RutaService } from './rutas.service';
 
 @Controller('rutas')
 @UseGuards(JwtAuthGuard)
 export class RutasController {
-  constructor(private readonly rutasService: RutasService) {}
+  constructor(private readonly rutasService: RutaService) {}
 
   @Post()
   create(@Body() createRutaDto: CreateRutaDto) {

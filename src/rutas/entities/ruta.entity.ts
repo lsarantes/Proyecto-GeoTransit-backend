@@ -1,6 +1,6 @@
-import { Alerta } from "src/alertas/entities/alerta.entity";
-import { CooperativasRuta } from "src/cooperativas_rutas/entities/cooperativas_ruta.entity";
-import { RutasBahia } from "src/rutas_bahias/entities/rutas_bahia.entity";
+import { TD_Alerta } from "@prisma/client";
+
+
 
 export class Ruta {
     nombre_ruta: string; 
@@ -12,4 +12,19 @@ export class Ruta {
     cooperativa: CooperativasRuta[];
     bahias: RutasBahia[];
     alertas: Alerta[];
+}
+
+export class Alerta {
+    id_alerta: string; 
+    tipo_alerta: TD_Alerta; 
+    ruta_id: string;
+}
+
+export class RutasBahia {
+    ruta_id: string; 
+    bahia_id: string;
+}
+export class CooperativasRuta {
+    cooperativa_id: string; 
+    ruta_id: string;
 }

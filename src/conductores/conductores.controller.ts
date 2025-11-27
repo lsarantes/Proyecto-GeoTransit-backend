@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ConductoresService } from './conductores.service';
-import { CreateConductoreDto } from './dto/create-conductore.dto';
 import { UpdateConductoreDto } from './dto/update-conductore.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CreateConductorDto } from './dto/create-conductore.dto';
 
 @Controller('conductores')
 @UseGuards(JwtAuthGuard)
@@ -10,7 +10,7 @@ export class ConductoresController {
   constructor(private readonly conductoresService: ConductoresService) {}
 
   @Post()
-  create(@Body() createConductoreDto: CreateConductoreDto) {
+  create(@Body() createConductoreDto: CreateConductorDto) {
     return this.conductoresService.create(createConductoreDto);
   }
 

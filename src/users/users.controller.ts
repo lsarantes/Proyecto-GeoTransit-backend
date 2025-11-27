@@ -1,34 +1,34 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { EmpleadoMtiService } from './users.service';
+import { CreateEmpleadoMtiDto } from './dto/create-user.dto';
+import { UpdateEmpleadoMtiDto } from './dto/update-user.dto';
 
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+@Controller('empleado-mti')
+export class EmpleadoMtiController {
+  constructor(private readonly empleadoMtiService: EmpleadoMtiService) {}
 
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.empleadoMtiService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.empleadoMtiService.findOne(id);
+  }
+
+  @Post()
+  create(@Body() createDto: CreateEmpleadoMtiDto) {
+    return this.empleadoMtiService.create(createDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(@Param('id') id: string, @Body() updateDto: UpdateEmpleadoMtiDto) {
+    return this.empleadoMtiService.update(id, updateDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.empleadoMtiService.remove(id);
   }
 }

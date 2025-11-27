@@ -1,43 +1,49 @@
-import * as validator from 'class-validator';
-import { ApiProperty } from "@nestjs/swagger";
-import { CooperativasRuta } from 'src/cooperativas_rutas/entities/cooperativas_ruta.entity';
+import { IsString, IsNotEmpty, IsNumber, IsArray, IsOptional, IsDateString } from 'class-validator';
 
 export class CreateCooperativaDto {
-    @ApiProperty({ required: true, example: 'Cooperativa Los Pinos' })
-    @validator.IsString()
-    nombre_cooperativa: string;
+  @IsString()
+  @IsNotEmpty()
+  codigoCoop: string; // El ID manual (PK)
 
-    @ApiProperty({ required: true, example: 'Calle Principal #123' })
-    @validator.IsString()
-    direccion: string;
+  @IsString()
+  @IsNotEmpty()
+  nombre_cooperativa: string;
 
-    @ApiProperty({ required: true, example: '505' })
-    @validator.IsString()
-    cod_pais: string;
+  @IsString()
+  @IsNotEmpty()
+  direccion: string;
 
-    @ApiProperty({ required: true, example: 12.34567 })
-    @validator.IsNumber()
-    latitud_ubicacion: number;
+  @IsString()
+  @IsOptional()
+  cod_pais: string;
 
-    @ApiProperty({ required: true, example: -76.54321 })
-    @validator.IsNumber()
-    logitud_ubicacion: number;
+  @IsNumber()
+  latitud_ubicacion: number;
 
-    @ApiProperty({ required: true, example: 12345678 })
-    @validator.IsInt()
-    no_telefonico: number;
-    
-    @ApiProperty({ required: true, example: 'http://example.com/foto.jpg' })
-    @validator.IsString()
-    url_foto_perfil: string;
+  @IsNumber()
+  logitud_ubicacion: number;
 
-    @ApiProperty({ required: true, example: '2024-06-15' })
-    @validator.IsDate()
-    fecha_de_creacion: Date;
+  @IsNumber()
+  no_telefonico: number;
 
-    @ApiProperty({ required: true, example: 1, description: 'ID del encargado' })
-    id_encargado: string;   
-    
-    @ApiProperty({ required: false, example: 'Ruta A' })
-    ruta: CooperativasRuta[];
+  @IsString()
+  @IsOptional()
+  url_foto_perfil: string;
+
+  @IsDateString()
+  fecha_de_creacion: string; // Recibimos fecha ISO
+
+  // RELACIONES
+  @IsString()
+  @IsNotEmpty()
+  id_encargado: string; // ID del Encargado_Cooperativa
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  rutasIds: string[]; // Array de IDs de las rutas (nombre_ruta) para vincular
 }
+
+// Para actualizar, extendemos usando PartialType (instala @nestjs/mapped-types si no lo tienes)
+import { PartialType } from '@nestjs/mapped-types';
+export class UpdateCooperativaDto extends PartialType(CreateCooperativaDto) {}

@@ -1,28 +1,35 @@
-import * as validator from 'class-validator';
-import { ApiProperty } from "@nestjs/swagger";
+import { IsString, IsEmail, IsOptional, IsEnum, IsBoolean } from 'class-validator';
+import { TD_NivelAcceso } from '@prisma/client';
 
-export class CreateUserDto {
-    @ApiProperty({ required: true, example: 'usuario123' })
-    @validator.IsString()
-    username: string;
+export class CreateEmpleadoMtiDto {
+  @IsString()
+  id: string; // El ID manual (ej: MTI-ADM-001)
 
-    @ApiProperty({ required: true, example: 'usuario@gmail.com' })
-    @validator.IsEmail()
-    email: string;
+  @IsString()
+  primer_nombre: string;
 
-    @ApiProperty({ required: true, example: 'securePassword!23' })
-    @validator.IsString()
-    password: string;
+  @IsString()
+  @IsOptional()
+  segundo_nombre?: string;
 
-    @ApiProperty({ required: true, example: '2024-01-01T12:00:00Z' })
-    @validator.IsDate()
-    f_ultimo_acceso: Date;
+  @IsString()
+  @IsOptional()
+  tercer_nombre?: string;
 
-    @ApiProperty({ required: true, example: true })
-    @validator.IsBoolean()
-    esta_activo: boolean;
+  @IsString()
+  primer_apellido: string;
 
-    @ApiProperty({ required: true, example: 'P0023' })
-    @validator.IsString()
-    persona_id: string;
+  @IsString()
+  @IsOptional()
+  segundo_apellido?: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @IsOptional()
+  url_Foto?: string;
+
+  @IsEnum(TD_NivelAcceso)
+  nivel_acceso: TD_NivelAcceso;
 }

@@ -1,41 +1,43 @@
-import * as validator from 'class-validator';
-import { ApiProperty } from "@nestjs/swagger";
-import { TD_Estado_Bus, TD_Estado_Ubicacion } from '@prisma/client';
+import { IsString, IsNotEmpty, IsNumber, IsEnum, IsDateString } from 'class-validator';
+import { TD_Estado_Bus, TD_Estado_Ubicacion } from '@prisma/client'; // Importamos Enums de Prisma
 
 export class CreateBusDto {
-    @ApiProperty({ required: true, example: 'GR1826' })
-    placa: string;
+  @IsString()
+  @IsNotEmpty()
+  placa: string; // PK (Ej: "M 123-456")
 
-    @ApiProperty({ required: true, example: 'Mercedez' })
-    @validator.IsString()
-    modelo: string;
+  @IsString()
+  @IsNotEmpty()
+  modelo: string;
 
-    @ApiProperty({ required: true, example: 120 })
-    @validator.IsNumber()
-    velocidad: number;
+  @IsNumber()
+  velocidad: number;
 
-    @ApiProperty({ required: true, example: 62 })
-    @validator.IsInt()
-    capacidad_de_pasajeros: number;
+  @IsNumber()
+  capacidad_de_pasajeros: number;
 
-    @ApiProperty({ required: true })
-    @validator.IsNumber()
-    latitud_actual: number;
+  // Ubicación inicial
+  @IsNumber()
+  latitud_actual: number;
 
-    @ApiProperty({ required: true })
-    longitud_actual: number;
+  @IsNumber()
+  longitud_actual: number;
 
-    @ApiProperty({ required: true, example: 'YYYY-MM-DD HH:SS' })
-    @validator.IsDate()
-    fecha_hora_ultima_ubicacion: Date;
+  @IsDateString()
+  fecha_hora_ultima_ubicacion: string;
 
-    @ApiProperty({ required: true, example: 'disponible' })
-    estado_ubicacion: TD_Estado_Ubicacion;
+  // Enums
+  @IsEnum(TD_Estado_Ubicacion)
+  estado_ubicacion: TD_Estado_Ubicacion;
 
-    @ApiProperty({ required: true, example: 'activo' })
-    estado_bus: TD_Estado_Bus;
+  @IsEnum(TD_Estado_Bus)
+  estado_bus: TD_Estado_Bus;
 
-    @ApiProperty({ required: true, example: 'C0001' })
-    @validator.IsString()
-    conductor_id: string;
+  // Relación
+  @IsString()
+  @IsNotEmpty()
+  conductor_id: string; // ID del Conductor
 }
+
+import { PartialType } from '@nestjs/mapped-types';
+export class UpdateBusDto extends PartialType(CreateBusDto) {}

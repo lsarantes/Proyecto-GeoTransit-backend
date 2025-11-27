@@ -13,7 +13,7 @@ import { JwtStrategy } from './strategy./jwt.strategy';
     PrismaModule,
     JwtModule.register({
       secret:'tutankamon',
-      signOptions: {expiresIn: '1h'}
+      signOptions: {expiresIn: '1d'}
     }),
   ],
   providers: [AuthService, JwtStrategy],

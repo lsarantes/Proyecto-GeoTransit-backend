@@ -1,5 +1,4 @@
-import { Pasajero } from 'src/pasajeros/entities/pasajero.entity';
-import { RutasBahia } from 'src/rutas_bahias/entities/rutas_bahia.entity';
+
 
 export class Bahia {
   nombre_bahia: string;
@@ -10,4 +9,15 @@ export class Bahia {
   rutas: RutasBahia[];
   empleado_mti_id: string;
   pasajeros: Pasajero[];
+}
+export class Pasajero {
+    id_pasajero: string; 
+    bahia_origen: string;
+    bahia_destino: string;
+    persona_id: string; 
+    bahia_id: string;
+}
+export class RutasBahia {
+    ruta_id: string; 
+    bahia_id: string;
 }

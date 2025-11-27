@@ -96,11 +96,12 @@ model Pasajero {
   persona_id    String  @unique
   persona       Persona @relation(fields: [persona_id], references: [id])
   bahia_id      String
-  bahia         Bahias  @relation(fields: [bahia_id], references: [nombre_bahia])
+  bahia         Bahias  @relation(fields: [bahia_id], references: [id])
 }
 
 model Cooperativa {
-  nombre_cooperativa String                @id
+  codigoCoop String                @id
+  nombre_cooperativa String                
   direccion          String
   cod_pais           String
   latitud_ubicacion  Float
@@ -108,13 +109,14 @@ model Cooperativa {
   no_telefonico      Int
   url_foto_perfil    String
   fecha_de_creacion  DateTime
-  id_encargado       String
-  encargado          Encargado_Cooperativa @relation(fields: [id_encargado], references: [id])
+  id_encargado       String?
+  encargado          Encargado_Cooperativa? @relation(fields: [id_encargado], references: [id])
   ruta               Cooperativa_Ruta[]
 }
 
 model Ruta {
-  nombre_ruta      String             @id
+  id String @id
+  nombre_ruta      String             
   origen_latitud   Float
   origen_longitud  Float
   destino_latitud  Float
@@ -128,14 +130,15 @@ model Ruta {
 model Cooperativa_Ruta {
   cooperativa_id String
   ruta_id        String
-  ruta           Ruta        @relation(fields: [ruta_id], references: [nombre_ruta])
-  cooperativa    Cooperativa @relation(fields: [cooperativa_id], references: [nombre_cooperativa])
+  ruta           Ruta        @relation(fields: [ruta_id], references: [id])
+  cooperativa    Cooperativa @relation(fields: [cooperativa_id], references: [codigoCoop])
 
   @@id([cooperativa_id, ruta_id])
 }
 
 model Bahias {
-  nombre_bahia       String       @id
+  id       String       @id
+  nombre_bahia       String       
   ubicacion_latitud  Float
   ubicacion_longitud Float
   url_foto           String
@@ -149,8 +152,8 @@ model Bahias {
 model RutaBahia {
   ruta_id  String
   bahia_id String
-  bahia    Bahias @relation(fields: [bahia_id], references: [nombre_bahia])
-  ruta     Ruta   @relation(fields: [ruta_id], references: [nombre_ruta])
+  bahia    Bahias @relation(fields: [bahia_id], references: [id])
+  ruta     Ruta   @relation(fields: [ruta_id], references: [id])
 
   @@id([ruta_id, bahia_id])
 }
@@ -159,7 +162,7 @@ model Alertas {
   id_alerta   String    @id
   tipo_alerta TD_Alerta
   ruta_id     String
-  ruta        Ruta      @relation(fields: [ruta_id], references: [nombre_ruta])
+  ruta        Ruta      @relation(fields: [ruta_id], references: [id])
 }
 
 enum TD_Alerta {

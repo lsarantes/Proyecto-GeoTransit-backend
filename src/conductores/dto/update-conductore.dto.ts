@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateConductoreDto } from './create-conductore.dto';
+import { CreateConductorDto } from './create-conductore.dto';
 
-export class UpdateConductoreDto extends PartialType(CreateConductoreDto) {}
+export class UpdateConductoreDto extends PartialType(CreateConductorDto) {}

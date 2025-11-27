@@ -1,37 +1,38 @@
-import * as validator from 'class-validator';
-import { ApiProperty } from "@nestjs/swagger";
-import { RutasBahia } from 'src/rutas_bahias/entities/rutas_bahia.entity';
-import { EmpleadosMti } from 'src/empleados-mti/entities/empleados-mti.entity';
-import { Pasajero } from 'src/pasajeros/entities/pasajero.entity';
+import { IsString, IsNotEmpty, IsNumber, IsArray, IsOptional, IsDateString } from 'class-validator';
 
 export class CreateBahiaDto {
-    @ApiProperty({ required: true, example: 'Metrocentro' })
-    @validator.IsString()
-    nombre_bahia: string;
+  @IsString()
+  @IsNotEmpty()
+  id: string; // Código de la bahía (ej: "BAH-001")
 
-    @ApiProperty({ required: true, example: 12.1234 })
-    @validator.IsNumber()
-    ubicacion_latitud: number;
+  @IsString()
+  @IsNotEmpty()
+  nombre_bahia: string;
 
-    @ApiProperty({ required: true, example: -86.5678 })
-    @validator.IsNumber()
-    ubicacion_longitud: number;
+  @IsNumber()
+  ubicacion_latitud: number;
 
-    @ApiProperty({ required: true, example: 'http://link.com/bahia_m.jpg' })
-    @validator.IsUrl()
-    url_foto: string;
+  @IsNumber()
+  ubicacion_longitud: number;
 
-    @ApiProperty({ required: true, type: 'string', format: 'date-time' })
-    @validator.IsDateString()
-    fecha_creada: Date;
+  @IsString()
+  @IsOptional()
+  url_foto: string;
 
-    @ApiProperty({ required: true, example: 'EMTI0001' })
-    @validator.IsString()
-    empleado_mti_id: string;
+  @IsDateString()
+  fecha_creada: string;
 
-    @ApiProperty({ required: false, type: () => EmpleadosMti })
-    rutas: RutasBahia[];
+  // Relación 1:N (Creador)
+  @IsString()
+  @IsNotEmpty()
+  empleado_mti_id: string; // ID del empleado que la registra
 
-    @ApiProperty({ required: false, type: () => Pasajero })
-    pasajeros: Pasajero[];
+  // Relación N:N (Rutas que pasan por aquí)
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  rutasIds?: string[]; 
 }
+
+import { PartialType } from '@nestjs/mapped-types';
+export class UpdateBahiaDto extends PartialType(CreateBahiaDto) {}

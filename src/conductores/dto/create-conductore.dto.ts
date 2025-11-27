@@ -1,16 +1,45 @@
-import * as validator from 'class-validator';
-import { ApiProperty } from "@nestjs/swagger";
-import { Bus } from 'src/buses/entities/bus.entity';
+import { IsString, IsNotEmpty, IsOptional, IsEmail } from 'class-validator';
 
-export class CreateConductoreDto {
-    @ApiProperty({ required: true, example: 'C0001' })
-    @validator.IsString()
-    id: string;
+export class CreateConductorDto {
+  // ID del Conductor (ej: COND-456)
+  @IsString()
+  @IsNotEmpty()
+  id: string; 
 
-    @ApiProperty({ required: false })
-    buses_asignados: Bus[];
+  // Datos Persona
+  @IsString()
+  @IsNotEmpty()
+  primer_nombre: string;
 
-    @ApiProperty({ required: true, example: 'P0001' })
-    @validator.IsString()
-    persona_id: string;
+  @IsString()
+  @IsOptional()
+  segundo_nombre: string;
+
+  @IsString()
+  @IsOptional()
+  tercer_nombre: string;
+
+  @IsString()
+  @IsNotEmpty()
+  primer_apellido: string;
+
+  @IsString()
+  @IsOptional()
+  segundo_apellido: string;
+
+  @IsString()
+  @IsOptional()
+  cod_pais: string;
+
+  @IsString()
+  @IsOptional()
+  url_Foto: string;
+
+  // Opcional: Si quieres que el conductor tenga login (App Móvil de Conductor)
+  @IsEmail()
+  @IsOptional()
+  email: string;
 }
+
+import { PartialType } from '@nestjs/mapped-types';
+export class UpdateConductorDto extends PartialType(CreateConductorDto) {}
