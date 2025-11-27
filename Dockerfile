@@ -39,7 +39,8 @@ COPY --from=builder /src/app/nestjs/package.json ./package.json
 COPY --from=builder /src/app/nestjs/node_modules ./node_modules
 COPY --from=builder /src/app/nestjs/dist ./dist
 COPY --from=builder /src/app/nestjs/prisma ./prisma
-COPY --from=builder /src/app/nestjs/.prisma ./.prisma
+# LÍNEA ELIMINADA: La carpeta .prisma no se encuentra en la raíz, se copia con node_modules.
+# EXPLICITAMENTE ELIMINAMOS: COPY --from=builder /src/app/nestjs/.prisma ./.prisma
 
 # Exponer el puerto
 EXPOSE 3000 
