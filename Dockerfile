@@ -46,6 +46,5 @@ COPY --from=builder /src/app/nestjs/prisma ./prisma
 EXPOSE 3000 
 
 # Comando Final de Arranque (Entrypoint)
-# 🚨 CORRECCIÓN TS-NODE: Ejecutar el seed con node para evitar la dependencia de ts-node en producción.
-# ¡Esto asume que tu seed compilado se llama dist/seed.js!
-CMD [ "sh", "-c", "npx prisma generate && npx prisma migrate deploy && node dist/seed.js && npm run start" ]
+# 🚨 CORRECCIÓN TS-NODE: Ahora usa el comando estándar de Prisma que ejecutará 'node dist/seed.js'
+CMD [ "sh", "-c", "npx prisma generate && npx prisma migrate deploy && npx prisma db seed && npm run start" ]
