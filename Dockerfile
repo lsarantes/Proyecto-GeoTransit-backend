@@ -47,4 +47,4 @@ EXPOSE 3000
 
 # Comando Final de Arranque (Entrypoint)
 # 🚨 CORRECCIÓN TS-NODE: Ahora usa el comando estándar de Prisma que ejecutará 'node dist/seed.js'
-CMD [ "sh", "-c", "npx prisma generate && npx prisma migrate deploy && npx prisma db seed && npm run start" ]
+CMD [ "sh", "-c", "npx prisma generate && npx prisma migrate deploy  && npm run start" ]
